@@ -1,37 +1,65 @@
 import sys
+from decimal import *
+
+class ProbCounter:
+    def __init__(self,filename):
+        self.file = open(filename,encoding='utf-8')
+        self.characters = [' ', 'ა', 'ბ', 'გ', 'დ', 'ე', 'ვ', 'ზ', 'თ', 'ი', 'კ', 'ლ', 'მ', 'ნ', 'ო', 'პ', 'ჟ',
+                           'რ', 'ს', 'ტ', 'უ', 'ფ', 'ქ', 'ღ', 'ყ', 'შ', 'ჩ', 'ც', 'ძ', 'წ', 'ჭ', 'ხ', 'ჯ', 'ჰ']
+        self.dic = dict()
+        for key in self.characters:
+            self.dic[key] = 0
+
+        self.dic_two = dict()
+        for first in self.characters:
+            for second in self.characters:
+                self.dic_two[first + second] = 0
+
+
+        self.total_count = 0
+        char = self.file.read(1)
+        prev_char = ' '
+
+        while char:
+
+            self.dic[char] += 1
+            self.dic_two[prev_char + char] += 1
+            self.total_count += 1
+
+            prev_char = char
+            char = self.file.read(1)
+
+    def get_symbol_probabilities(self):
+        return self.get_probs(self.dic)
+
+    def get_double_symbol_probabilities(self):
+        return self.get_probs(self.dic_two)
+
+    def get_probs(self, dic):
+        keys = dic.keys()
+        keys = sorted(keys)
+        result = []
+        for k in keys:
+            num = str(float(dic[k]) / float(self.total_count))
+            # print(num + " " + str(Decimal(str(num)).quantize(Decimal('.0000001'), rounding=ROUND_DOWN)))
+            number = '%.7f' % float(num)
+            result.append(number)
+        return result
 
 
 def main():
 
-    filename = sys.argv[1]
-    file = open("Public Tests/A/001.dat")
+    prob_counter = ProbCounter(sys.argv[1])
+    output = open(sys.argv[2], 'w+')
 
-    total_count = 0
-    dic = dict()
-    dic_two = dict()
-    char = file.read(1)
-    prev_char = ' '
-    while char:
+    probs = prob_counter.get_symbol_probabilities()
+    for i in range(len(probs)):
+        output.write(str(probs[i]) + ("\n" if (i == (len(probs) - 1)) else " "))
 
-        if char in dic.keys():
-            dic[char] += 1
-        else:
-            dic[char] = 1
+    double_probs = prob_counter.get_double_symbol_probabilities()
 
-        if prev_char + char in dic_two:
-            #print(prev_char + char)
-            dic_two[prev_char + char] += 1
-        else:
-            dic_two[prev_char + char] = 1
-
-        total_count += 1
-        prev_char = char
-        char = file.read(1)
-
-    keys = dic_two.keys()
-    keys = sorted(keys)
-    #for k in keys:
-    #   print(round(float(dic_two[k]) / (total_count - 1), 7))
+    for i in range(len(double_probs)):
+        output.write(str(double_probs[i]) + ("\n" if (i == (len(double_probs) - 1)) else " "))
 
 
 if __name__ == "__main__":
