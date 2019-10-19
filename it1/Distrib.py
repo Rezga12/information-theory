@@ -1,6 +1,7 @@
 import sys
 from decimal import *
 
+
 class ProbCounter:
     def __init__(self,filename):
         self.file = open(filename,encoding='utf-8')
@@ -42,7 +43,7 @@ class ProbCounter:
         for k in keys:
             num = str(float(dic[k]) / float(self.total_count))
             # print(num + " " + str(Decimal(str(num)).quantize(Decimal('.0000001'), rounding=ROUND_DOWN)))
-            number = '%.7f' % float(num)
+            number = float(num)
             result.append(number)
         return result
 
@@ -59,7 +60,7 @@ def main():
     double_probs = prob_counter.get_double_symbol_probabilities()
 
     for i in range(len(double_probs)):
-        output.write(str(double_probs[i]) + ("\n" if (i == (len(double_probs) - 1)) else " "))
+        output.write(('%.7f' % str(double_probs[i])) + ("\n" if (i == (len(double_probs) - 1)) else " "))
 
 
 if __name__ == "__main__":
