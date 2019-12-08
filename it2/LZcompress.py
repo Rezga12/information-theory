@@ -1,5 +1,7 @@
 import sys
 import os
+import timeit
+
 
 def get_elias(size):
 
@@ -44,10 +46,7 @@ class Bitter:
         if byte == b'':
             return None
 
-        for i in range(8):
-            final_byte += str(0 if int(byte[0]) & (1 << (7 - i)) == 0 else 1)
-
-        return final_byte
+        return bin(int(byte[0])).lstrip('0b').zfill(8)
 
     def get_next_bit(self):
 
@@ -70,6 +69,7 @@ class Bitter:
 
 
 def main():
+    start = timeit.default_timer()
     in_file = sys.argv[1]
     size = os.stat(in_file).st_size
     code = get_elias(size)
@@ -117,6 +117,10 @@ def main():
     out.write(bitstring_to_bytes(code))
 
     print(len(code))
+
+    stop = timeit.default_timer()
+
+    print(stop - start)
 
     # out_file = sys.argv[2]
 

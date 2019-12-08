@@ -55,12 +55,12 @@ def main():
 
     probs = prob_counter.get_symbol_probabilities()
     for i in range(len(probs)):
-        output.write(str(probs[i]) + ("\n" if (i == (len(probs) - 1)) else " "))
+        output.write(str('%.7f' % probs[i]) + ("\n" if (i == (len(probs) - 1)) else " "))
 
     double_probs = prob_counter.get_double_symbol_probabilities()
 
     for i in range(len(double_probs)):
-        output.write(('%.7f' % str(double_probs[i])) + ("\n" if (i == (len(double_probs) - 1)) else " "))
+        output.write((str('%.7f' % double_probs[i])) + ("\n" if (i == (len(double_probs) - 1)) else " "))
 
 
 if __name__ == "__main__":
